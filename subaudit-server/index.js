@@ -13,13 +13,8 @@ const { detectSubscriptions, calculateSummary } = require("./subscriptions");
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin: [
-    "http://localhost:5500",         // VSCode Live Server
-    "http://127.0.0.1:5500",
-    "http://localhost:3000",
-    "https://essieni-1.github.io",   // Your GitHub Pages site
-  ],
-  credentials: true,
+  origin: "*",
+  credentials: false,
 }));
 
 // =====================
