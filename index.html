@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SubAudit — Stop Leaking Money</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">sub<span>audit</span></a>
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+      </ul>
+      <a href="#waitlist" class="nav-cta">Get early access</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="blob blob1"></div>
+      <div class="blob blob2"></div>
+      <div class="grid-overlay"></div>
+    </div>
+    <div class="hero-inner">
+      <div class="hero-badge">🔍 Now scanning 50,000+ accounts</div>
+      <h1 class="hero-title">Stop leaking<br /><em>money.</em></h1>
+      <p class="hero-sub">SubAudit connects to your bank and finds every subscription quietly draining your account — even the ones you forgot about. Cancel in one tap.</p>
+      <div class="hero-actions">
+        <a href="#waitlist" class="btn-primary">Connect your bank free →</a>
+        <a href="#how" class="btn-ghost">See how it works</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-val">$347</span>
+          <span class="stat-label">avg saved per user/year</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-val">3.2</span>
+          <span class="stat-label">forgotten subs found on avg</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-val">90s</span>
+          <span class="stat-label">to complete your audit</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone mockup -->
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-screen" id="phone-screen">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span>Netflix · Spotify · Adobe CC · Hulu · Dropbox · LinkedIn Premium · YouTube Premium · iCloud · Duolingo · Notion · Figma · Audible · Apple TV+ · Disney+ · Amazon Prime · Calm · Headspace · Grammarly · Canva · Slack ·&nbsp;</span>
+      <span>Netflix · Spotify · Adobe CC · Hulu · Dropbox · LinkedIn Premium · YouTube Premium · iCloud · Duolingo · Notion · Figma · Audible · Apple TV+ · Disney+ · Amazon Prime · Calm · Headspace · Grammarly · Canva · Slack ·&nbsp;</span>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <section class="how" id="how">
+    <div class="section-inner">
+      <div class="section-label">How it works</div>
+      <h2 class="section-title">Three steps.<br />One tap to cancel.</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-icon">🏦</div>
+          <h3>Connect your bank</h3>
+          <p>We use Plaid's bank-grade encryption to securely read your transactions. Read-only. Never stores credentials.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-icon">🔍</div>
+          <h3>We find everything</h3>
+          <p>Our AI scans 90 days of history, identifies recurring charges, and scores each one by how much you actually use it.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-icon">✂️</div>
+          <h3>Cancel the waste</h3>
+          <p>Review your audit report. Cancel the subscriptions you forgot about with one tap. Keep what you love.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <div class="section-inner">
+      <div class="section-label">Features</div>
+      <h2 class="section-title">Everything you need to<br />take back control.</h2>
+      <div class="features-grid">
+        <div class="feature-card feature-large">
+          <div class="feature-tag">Core</div>
+          <h3>Usage scoring</h3>
+          <p>We don't just find subscriptions — we tell you which ones you're actually using. Low, medium, or high: know exactly what's worth keeping.</p>
+          <div class="usage-demo">
+            <div class="usage-row"><span class="dot red"></span><span>Adobe CC</span><span class="badge red">Rarely used</span><span class="amount">$54.99</span></div>
+            <div class="usage-row"><span class="dot yellow"></span><span>Dropbox</span><span class="badge yellow">Sometimes</span><span class="amount">$9.99</span></div>
+            <div class="usage-row"><span class="dot green"></span><span>Spotify</span><span class="badge green">Used often</span><span class="amount">$11.99</span></div>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-tag">Smart</div>
+          <h3>Waste calculator</h3>
+          <p>See exactly how much you're bleeding per month and year on services you barely use.</p>
+          <div class="waste-pill">You may be wasting <strong>$86/mo</strong> · $1,032/yr</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-tag">Private</div>
+          <h3>Read-only access</h3>
+          <p>SubAudit can never move money. We only read transaction history, and we never store your credentials.</p>
+          <div class="lock-icon">🔒</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-tag">Alerts</div>
+          <h3>New sub alerts</h3>
+          <p>Get notified the moment a new recurring charge appears on your account — before it becomes a habit.</p>
+        </div>
+        <div class="feature-card feature-large feature-dark">
+          <div class="feature-tag">Coming soon</div>
+          <h3>One-tap cancellation</h3>
+          <p>We're building direct integrations with 200+ services so you can cancel without leaving the app. No customer service hold music.</p>
+          <div class="coming-soon-logos">
+            <span>Netflix</span><span>Spotify</span><span>Adobe</span><span>Hulu</span><span>+ 196 more</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing" id="pricing">
+    <div class="section-inner">
+      <div class="section-label">Pricing</div>
+      <h2 class="section-title">Pay nothing until<br />you save something.</h2>
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <div class="plan-name">Free</div>
+          <div class="plan-price">$0<span>/forever</span></div>
+          <ul class="plan-features">
+            <li>✓ Full subscription audit</li>
+            <li>✓ Usage scoring</li>
+            <li>✓ Waste calculator</li>
+            <li>✓ 1 bank account</li>
+            <li class="muted">✗ New sub alerts</li>
+            <li class="muted">✗ One-tap cancel</li>
+          </ul>
+          <a href="#waitlist" class="btn-outline">Get started free</a>
+        </div>
+        <div class="pricing-card pricing-featured">
+          <div class="plan-badge">Most popular</div>
+          <div class="plan-name">Pro</div>
+          <div class="plan-price">$4<span>/month</span></div>
+          <ul class="plan-features">
+            <li>✓ Everything in Free</li>
+            <li>✓ Unlimited bank accounts</li>
+            <li>✓ New sub alerts</li>
+            <li>✓ One-tap cancellation</li>
+            <li>✓ Annual trend reports</li>
+            <li>✓ Priority support</li>
+          </ul>
+          <a href="#waitlist" class="btn-primary">Start free trial</a>
+        </div>
+      </div>
+      <p class="pricing-note">The average Pro user saves $347/year. That's an 86x return.</p>
+    </div>
+  </section>
+
+  <!-- WAITLIST -->
+  <section class="waitlist" id="waitlist">
+    <div class="waitlist-inner">
+      <div class="waitlist-blob"></div>
+      <h2>Join 4,200+ people<br />on the waitlist.</h2>
+      <p>Early access users get Pro free for 3 months.</p>
+      <form class="waitlist-form" onsubmit="handleSubmit(event)">
+        <input type="email" placeholder="your@email.com" required />
+        <button type="submit">Get early access →</button>
+      </form>
+      <div class="waitlist-success" id="success-msg">
+        🎉 You're on the list! We'll be in touch soon.
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <span class="nav-logo">sub<span>audit</span></span>
+      <p>© 2026 SubAudit. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Security</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
