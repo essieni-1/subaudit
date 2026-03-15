@@ -69,9 +69,22 @@ function initScrollAnimations() {
 function handleSubmit(e) {
   e.preventDefault();
   const form = e.target;
-  const success = document.getElementById("success-msg");
-  form.style.display = "none";
-  success.style.display = "block";
+  const email = form.querySelector('input[type="email"]').value;
+
+  fetch(form.action, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+    body: JSON.stringify({ email })
+  })
+  .then(res => {
+    if (res.ok) {
+      form.style.display = "none";
+      document.getElementById("success-msg").style.display = "block";
+    } else {
+      alert("Something went wrong. Please try again.");
+    }
+  })
+  .catch(() => alert("Network error. Please try again."));
 }
 
 // =====================
