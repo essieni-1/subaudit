@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SubAudit — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --lime: #C8FF00;
+      --bg: #09090F;
+      --bg2: #111118;
+      --bg3: #16161F;
+      --border: #1E1E2A;
+      --text: #FFFFFF;
+      --muted: #666680;
+      --red: #FF4D4D;
+      --yellow: #FFB800;
+      --green: #00C897;
+      --red-bg: #FF4D4D18;
+      --yellow-bg: #FFB80018;
+      --green-bg: #00C89718;
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: var(--font-body); min-height: 100vh;
+    }
+
+    /* NAV */
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: #09090Fcc; backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .nav-logo { font-family: var(--font-display); font-size: 20px; font-weight: 900; }
+    .nav-logo span { color: var(--lime); }
+    .nav-user { margin-left: auto; color: var(--muted); font-size: 14px; }
+    .nav-signout {
+      background: var(--bg3); border: 1px solid var(--border);
+      color: var(--muted); padding: 8px 16px; border-radius: 10px;
+      font-size: 13px; cursor: pointer; font-family: var(--font-body);
+      transition: color 0.2s;
+    }
+    .nav-signout:hover { color: var(--text); }
+
+    /* MAIN */
+    .main { max-width: 900px; margin: 0 auto; padding: 40px 24px; }
+
+    /* EMPTY STATE */
+    .empty-state {
+      text-align: center; padding: 80px 24px;
+    }
+    .empty-icon { font-size: 56px; margin-bottom: 24px; }
+    .empty-state h2 {
+      font-family: var(--font-display);
+      font-size: 32px; font-weight: 900; margin-bottom: 12px;
+    }
+    .empty-state p { color: var(--muted); font-size: 16px; margin-bottom: 32px; }
+    .btn-primary {
+      background: var(--lime); color: #09090F;
+      border: none; border-radius: 14px;
+      padding: 14px 28px; font-size: 16px; font-weight: 800;
+      font-family: var(--font-display); cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-2px); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* SUMMARY */
+    .summary-grid {
+      display: flex; gap: 14px; margin-bottom: 28px; flex-wrap: wrap;
+    }
+    .summary-card {
+      flex: 1; min-width: 140px;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 16px; padding: 20px 18px;
+    }
+    .summary-val {
+      font-family: var(--font-display);
+      font-size: 28px; font-weight: 900; color: var(--lime);
+    }
+    .summary-label { color: var(--muted); font-size: 12px; margin-top: 6px; }
+
+    /* WASTE BANNER */
+    .waste-banner {
+      background: var(--red-bg); border: 1px solid #FF4D4D30;
+      border-radius: 14px; padding: 16px 20px;
+      color: var(--red); font-size: 14px; margin-bottom: 28px;
+      display: flex; align-items: center; gap: 12px;
+    }
+
+    /* SUB LIST */
+    .list-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 12px;
+    }
+    .sub-row {
+      display: flex; align-items: center; gap: 14px;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 16px; padding: 16px 20px; margin-bottom: 10px;
+      transition: border-color 0.2s;
+    }
+    .sub-row:hover { border-color: #333350; }
+    .sub-name { font-weight: 700; font-size: 15px; flex: 1; }
+    .sub-cat { color: var(--muted); font-size: 12px; margin-top: 3px; }
+    .sub-amount { font-weight: 700; font-size: 15px; text-align: right; }
+    .sub-annual { color: var(--muted); font-size: 12px; margin-top: 3px; }
+    .usage-pill {
+      font-size: 11px; font-weight: 700;
+      padding: 4px 10px; border-radius: 8px;
+    }
+    .pill-red { background: var(--red-bg); color: var(--red); }
+    .pill-yellow { background: var(--yellow-bg); color: var(--yellow); }
+    .pill-green { background: var(--green-bg); color: var(--green); }
+
+    /* LOADING */
+    #loading-overlay {
+      display: none; position: fixed; inset: 0;
+      background: #09090Fdd; z-index: 999;
+      flex-direction: column; align-items: center; justify-content: center;
+    }
+    .spinner {
+      width: 48px; height: 48px; border-radius: 24px;
+      border: 3px solid var(--border); border-top-color: var(--lime);
+      animation: spin 0.8s linear infinite; margin-bottom: 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+    .fade-in { animation: fadeUp 0.5s ease both; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <span class="nav-logo">sub<span>audit</span></span>
+    <span class="nav-user" id="nav-user"></span>
+    <button class="nav-signout" onclick="signOut()">Sign out</button>
+  </nav>
+
+  <div class="main" id="main-content">
+    <!-- Injected by JS -->
+  </div>
+
+  <div id="loading-overlay">
+    <div class="spinner"></div>
+    <div id="loading-text" style="color:#fff;font-size:18px;font-weight:700;font-family:'Syne',sans-serif">Scanning transactions...</div>
+    <div style="color:#666;font-size:14px;margin-top:8px">Analyzing 90 days of history</div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://qlpeoqztfzscksaehyoq.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_1GivVF7YUdX0DqyUXStC5A_LrFHbsDs";
+    const API_URL = "https://subaudit-github-io.up.railway.app";
+
+    const { createClient } = supabase;
+    const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let currentUser = null;
+    let subscriptions = [];
+    let summary = null;
+
+    // =====================
+    // AUTH GUARD
+    // =====================
+    async function init() {
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session) {
+        window.location.href = "login.html";
+        return;
+      }
+      currentUser = session.user;
+      document.getElementById("nav-user").textContent = currentUser.email;
+      renderEmpty();
+    }
+
+    async function signOut() {
+      await sb.auth.signOut();
+      window.location.href = "login.html";
+    }
+
+    // =====================
+    // EMPTY STATE
+    // =====================
+    function renderEmpty() {
+      document.getElementById("main-content").innerHTML = `
+        <div class="empty-state fade-in">
+          <div class="empty-icon">🏦</div>
+          <h2>Connect your bank</h2>
+          <p>We'll scan 90 days of transactions and find every subscription quietly draining your account.</p>
+          <button class="btn-primary" id="connect-btn" onclick="startPlaid()">
+            Connect your bank free →
+          </button>
+          <p style="color:var(--muted);font-size:12px;margin-top:16px">🔒 Read-only · Bank-grade encryption · Never stores credentials</p>
+        </div>
+      `;
+    }
+
+    // =====================
+    // PLAID FLOW
+    // =====================
+    async function startPlaid() {
+      const btn = document.getElementById("connect-btn");
+      btn.disabled = true; btn.textContent = "Connecting...";
+
+      try {
+        const res = await fetch(`${API_URL}/api/create-link-token`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user_id: currentUser.id })
+        });
+        const data = await res.json();
+
+        const handler = Plaid.create({
+          token: data.link_token,
+          onSuccess: async (public_token) => {
+            showLoading("Scanning your transactions...");
+            try {
+              const ex = await fetch(`${API_URL}/api/exchange-token`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ public_token, user_id: currentUser.id })
+              });
+              const exData = await ex.json();
+
+              document.getElementById("loading-text").textContent = "Detecting subscriptions...";
+
+              const subsRes = await fetch(`${API_URL}/api/subscriptions`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ item_id: exData.item_id })
+              });
+              const subsData = await subsRes.json();
+              hideLoading();
+              renderResults(subsData);
+            } catch(e) {
+              hideLoading();
+              alert("Error scanning. Please try again.");
+            }
+          },
+          onExit: () => {
+            if(btn) { btn.disabled = false; btn.textContent = "Connect your bank free →"; }
+          }
+        });
+        handler.open();
+      } catch(e) {
+        btn.disabled = false; btn.textContent = "Connect your bank free →";
+        alert("Could not connect. Please try again.");
+      }
+    }
+
+    // =====================
+    // RESULTS
+    // =====================
+    function renderResults(data) {
+      subscriptions = data.subscriptions;
+      summary = data.summary;
+
+      const usageLabel = { low: "Rarely used", medium: "Sometimes", high: "Used often" };
+      const pillClass = { low: "pill-red", medium: "pill-yellow", high: "pill-green" };
+
+      document.getElementById("main-content").innerHTML = `
+        <div class="fade-in">
+          <h2 style="font-family:var(--font-display);font-size:28px;font-weight:900;margin-bottom:24px">
+            Your audit results
+          </h2>
+
+          <div class="summary-grid">
+            <div class="summary-card">
+              <div class="summary-val">$${summary.totalMonthly}</div>
+              <div class="summary-label">Monthly spend</div>
+            </div>
+            <div class="summary-card">
+              <div class="summary-val" style="color:var(--red)">$${summary.wasteMonthly}</div>
+              <div class="summary-label">Potential waste/mo</div>
+            </div>
+            <div class="summary-card">
+              <div class="summary-val" style="color:var(--lime)">$${summary.wasteAnnual}</div>
+              <div class="summary-label">You could save/yr</div>
+            </div>
+            <div class="summary-card">
+              <div class="summary-val">${summary.count}</div>
+              <div class="summary-label">Subscriptions found</div>
+            </div>
+          </div>
+
+          ${summary.wasteMonthly > 0 ? `
+          <div class="waste-banner">
+            ⚠️ <strong>You may be wasting $${summary.wasteMonthly}/mo ($${summary.wasteAnnual}/yr)</strong> on ${summary.lowUsageCount} low-usage subscriptions.
+          </div>` : ''}
+
+          <div class="list-label">ALL SUBSCRIPTIONS</div>
+          ${subscriptions.map(sub => `
+            <div class="sub-row">
+              <div style="flex:1">
+                <div class="sub-name">${sub.name}</div>
+                <div class="sub-cat">${sub.category} · Last charged ${sub.lastCharged}</div>
+              </div>
+              <span class="usage-pill ${pillClass[sub.usage]}">${usageLabel[sub.usage]}</span>
+              <div style="text-align:right">
+                <div class="sub-amount">$${sub.amount}/mo</div>
+                <div class="sub-annual">$${sub.annualCost}/yr</div>
+              </div>
+            </div>
+          `).join("")}
+
+          <button class="btn-primary" style="margin-top:24px" onclick="startPlaid()">
+            + Connect another bank
+          </button>
+        </div>
+      `;
+    }
+
+    // =====================
+    // LOADING
+    // =====================
+    function showLoading(text) {
+      document.getElementById("loading-text").textContent = text;
+      document.getElementById("loading-overlay").style.display = "flex";
+    }
+    function hideLoading() {
+      document.getElementById("loading-overlay").style.display = "none";
+    }
+
+    init();
+  </script>
+</body>
+</html>
